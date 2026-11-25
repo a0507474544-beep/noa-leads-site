@@ -1,0 +1,891 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>לידים נועה גיוס</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Heebo:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: dispatch board. Sticky control deck on top, a dense list grouped by city, a side sheet for one lead. */
+:root{
+  --bg:#f4f7f6; --surface:#ffffff; --surface-2:#e8efed; --line:#cfe0df;
+  --ink:#143038; --muted:#5e757e; --accent:#1c7b82; --accent-ink:#ffffff; --accent-soft:#d9efee;
+  --sign:#8fd3c4;
+  --st-new:#5e757e; --st-new-bg:#e8efed;
+  --st-wait:#7a5d12; --st-wait-bg:#f8eccd;
+  --st-int:#2e70a8; --st-int-bg:#dde9f6;
+  --st-proc:#6c3f91; --st-proc-bg:#ece3f5;
+  --st-hired:#11683a; --st-hired-bg:#d6f0df;
+  --st-no:#9b2c2c; --st-no-bg:#f7dede;
+  --shadow:0 12px 32px rgba(14,58,68,.20);
+  --f-display:"Frank Ruhl Libre","Heebo",Georgia,serif;
+  --f-body:"Heebo",Arial,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#08232a; --surface:#0e323b; --surface-2:#133f49; --line:#1f525c;
+  --ink:#e6f1f0; --muted:#93b0b5; --accent:#3fc1b8; --accent-ink:#08232a; --accent-soft:#124a4f;
+  --sign:#8fd3c4;
+  --st-new:#a9bec2; --st-new-bg:#1a3d45;
+  --st-wait:#f0c96a; --st-wait-bg:#3b3220;
+  --st-int:#8cbcec; --st-int-bg:#16334d;
+  --st-proc:#cfa2e8; --st-proc-bg:#33243d;
+  --st-hired:#7fd6a2; --st-hired-bg:#173a2a;
+  --st-no:#f0a3a3; --st-no-bg:#3e2222;
+  --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08232a; --surface:#0e323b; --surface-2:#133f49; --line:#1f525c;
+  --ink:#e6f1f0; --muted:#93b0b5; --accent:#3fc1b8; --accent-ink:#08232a; --accent-soft:#124a4f;
+  --sign:#8fd3c4;
+  --st-new:#a9bec2; --st-new-bg:#1a3d45;
+  --st-wait:#f0c96a; --st-wait-bg:#3b3220;
+  --st-int:#8cbcec; --st-int-bg:#16334d;
+  --st-proc:#cfa2e8; --st-proc-bg:#33243d;
+  --st-hired:#7fd6a2; --st-hired-bg:#173a2a;
+  --st-no:#f0a3a3; --st-no-bg:#3e2222;
+  --shadow:0 12px 32px rgba(0,0,0,.5); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;direction:rtl}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+
+.deck{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 10px;display:grid;gap:10px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px;margin-inline-end:auto}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:22px;margin:0;letter-spacing:.2px}
+.brand .sign{background:var(--sign);color:#143038;font-family:var(--f-body);font-weight:600;font-size:13px;padding:1px 8px;border-radius:3px}
+.brand small{color:var(--muted);font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.small{padding:4px 9px;font-size:13px}
+
+.tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:2px solid var(--ink);margin-inline:-4px;padding-inline:4px;scrollbar-width:thin}
+.tab{border:1px solid var(--line);border-bottom:0;background:var(--surface-2);border-radius:7px 7px 0 0;padding:6px 11px;cursor:pointer;white-space:nowrap;font-size:13px;color:var(--muted)}
+.tab b{font-variant-numeric:tabular-nums;font-weight:600;margin-inline-start:4px}
+.tab.drv{border-top:3px solid var(--sign)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.pipe{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--surface);cursor:pointer;white-space:nowrap;font-size:13px}
+.chip b{font-variant-numeric:tabular-nums;font-weight:600}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip.follow{border-style:dashed}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters input[type=search]{flex:1 1 220px;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 11px}
+.filters select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;max-width:100%;flex:0 1 auto}
+
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;max-width:1200px;margin:0 auto}
+.status-line{color:var(--muted);font-size:13px;margin:0 0 8px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status-line .warn{color:var(--st-wait)}
+.group-h{position:sticky;top:var(--deck-h,150px);z-index:2;background:var(--bg);font-family:var(--f-display);font-size:15px;padding:10px 2px 6px;display:flex;gap:8px;align-items:baseline;border-bottom:2px solid var(--ink)}
+.group-h span{font-family:var(--f-body);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.list{display:grid;gap:0;margin-bottom:6px}
+.row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,2.4fr) 120px 118px 86px;gap:12px;align-items:center;padding:9px 8px;border-bottom:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:right;border-inline:0;border-top:0;width:100%}
+.row:hover{background:var(--surface-2)}
+.row .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .sub{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .job{min-width:0}
+.row .job div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .ph{font-variant-numeric:tabular-nums;direction:ltr;text-align:right;font-size:13px}
+.row .dt{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;text-align:left}
+.pill{display:inline-block;border-radius:5px;padding:2px 8px;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.g-new{color:var(--st-new);background:var(--st-new-bg)} .g-wait{color:var(--st-wait);background:var(--st-wait-bg)}
+.g-int{color:var(--st-int);background:var(--st-int-bg)} .g-proc{color:var(--st-proc);background:var(--st-proc-bg)}
+.g-hired{color:var(--st-hired);background:var(--st-hired-bg)} .g-no{color:var(--st-no);background:var(--st-no-bg)}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--muted);margin-inline-start:6px;white-space:nowrap}
+.tag.lic{border-color:var(--sign);color:var(--ink)}
+.tag.fu{background:var(--sign);border-color:var(--sign);color:#143038}
+.more{display:flex;justify-content:center;padding:16px}
+.empty{padding:40px 10px;text-align:center;color:var(--muted)}
+
+@media (max-width:760px){
+  .row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a d" "b c";row-gap:4px}
+  .row .who{grid-area:a;min-width:0} .row .job{grid-area:b} .row .ph{grid-area:c;text-align:left} .row .st{grid-area:d;justify-self:end} .row .dt{display:none}
+}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(8,35,42,.45);z-index:20}
+.sheet{position:fixed;top:0;bottom:0;left:0;width:min(520px,100%);background:var(--surface);z-index:21;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px)}
+.sheet header{display:flex;align-items:flex-start;gap:10px;padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.sheet header h2{font-family:var(--f-display);font-weight:700;font-size:22px;margin:0;line-height:1.2;text-wrap:balance}
+.sheet header .meta{color:var(--muted);font-size:13px;margin-top:3px}
+.sheet .x{margin-inline-start:auto;border:0;background:transparent;font-size:24px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px}
+.sheet .body{overflow-y:auto;padding:14px 18px 24px;display:grid;gap:16px}
+.phone-box{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.phone-box .num{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr;user-select:all;margin-inline-end:auto}
+.phone-box a{color:var(--accent);font-weight:600;text-decoration:none;font-size:13px}
+.phone-box a.dial{color:var(--accent-ink);text-decoration:none}
+.dial-row{color:var(--accent);text-decoration:none;font-weight:600}
+.dial-row:hover{text-decoration:underline}
+dl.facts{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;margin:0}
+dl.facts dt{color:var(--muted);font-size:13px} dl.facts dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.sec h3{font-size:12px;letter-spacing:.6px;color:var(--muted);margin:0 0 6px;font-weight:600}
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.edit-grid label{display:grid;gap:4px;font-size:12.5px;color:var(--muted)}
+.edit-grid input,.edit-grid select,textarea{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;color:var(--ink);width:100%}
+textarea{min-height:90px;resize:vertical}
+.calls{display:grid;gap:8px;margin-top:8px}
+.call{border-inline-start:3px solid var(--accent);background:var(--surface-2);padding:7px 10px;border-radius:0 6px 6px 0;white-space:pre-wrap}
+.call time{display:block;color:var(--muted);font-size:12px;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.reason{background:var(--surface-2);border-radius:8px;padding:9px 11px;white-space:pre-wrap;font-size:13.5px}
+.saved{color:var(--st-hired);font-size:12.5px}
+.cvbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cvview{margin-top:10px;display:grid;gap:8px;max-height:70vh;overflow:auto;background:var(--surface-2);border-radius:8px}
+.cvview:empty{display:none}
+.cvview canvas,.cvview img{display:block;width:100%;height:auto;background:#fff;border-radius:4px}
+.cvview .doc{background:#fff;color:#143038;padding:16px;border-radius:4px;font-size:13.5px;line-height:1.55;overflow-wrap:anywhere}
+.cvview .doc img{max-width:100%}
+.cvname{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.meter{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);width:0}
+.imp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.imp-stats div{background:var(--surface-2);border-radius:8px;padding:8px 10px}
+.imp-stats b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.imp-stats span{font-size:12px;color:var(--muted)}
+.tag.cv{border-color:var(--accent);color:var(--accent)}
+.err{color:var(--st-no);font-size:12.5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid label{display:grid;gap:4px;font-size:12.5px;color:var(--muted)}
+.form-grid input,.form-grid select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;width:100%}
+@media (max-width:520px){.edit-grid,.form-grid{grid-template-columns:1fr} dl.facts{grid-template-columns:90px minmax(0,1fr)}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:slide .18s ease-out}@keyframes slide{from{transform:translateX(-24px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+<style>
+/* ============ Premium 3D layer (see .claude/skills/noa-brand-design) ============ */
+:root{
+  --petrol:#0e3a44; --petrol-2:#0a2c34; --teal:#2aa3ad; --teal-br:#3fc1b8; --teal-edge:#1c7b82; --teal-deep:#145b61; --mint:#8fd3c4;
+  --glass:rgba(255,255,255,.78); --hair:rgba(14,58,68,.10); --hi:rgba(255,255,255,.9);
+  --elev-1:0 1px 1px rgba(14,58,68,.05),0 2px 6px rgba(14,58,68,.06),0 8px 18px -10px rgba(14,58,68,.18);
+  --elev-2:0 1px 2px rgba(14,58,68,.06),0 6px 14px rgba(14,58,68,.10),0 18px 36px -14px rgba(14,58,68,.28);
+  --elev-3:0 2px 6px rgba(14,58,68,.10),0 24px 60px -12px rgba(8,35,42,.45);
+  --well:inset 0 2px 4px rgba(14,58,68,.09),inset 0 0 0 1px rgba(14,58,68,.06);
+  --btn-top:#ffffff; --btn-bot:#eef4f3; --btn-ledge:#c9dbd9;
+  --pri-top:#33b3bc; --pri-bot:#1c7b82; --pri-ledge:#0f4f55;
+  --ring:0 0 0 3px rgba(42,163,173,.35);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --page-glow:radial-gradient(1100px 520px at 100% -10%,rgba(63,193,184,.16),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(143,211,196,.18),transparent 60%);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --glass:rgba(14,50,59,.72); --hair:rgba(143,211,196,.12); --hi:rgba(255,255,255,.10);
+  --elev-1:0 1px 1px rgba(0,0,0,.25),0 4px 12px rgba(0,0,0,.25);
+  --elev-2:0 2px 4px rgba(0,0,0,.3),0 14px 30px -10px rgba(0,0,0,.55);
+  --elev-3:0 2px 8px rgba(0,0,0,.4),0 30px 70px -14px rgba(0,0,0,.7);
+  --well:inset 0 2px 5px rgba(0,0,0,.35),inset 0 0 0 1px rgba(143,211,196,.08);
+  --btn-top:#18434d; --btn-bot:#113740; --btn-ledge:#061a1f;
+  --pri-top:#4fd0c6; --pri-bot:#2a9fa6; --pri-ledge:#0d5156;
+  --page-glow:radial-gradient(1100px 520px at 100% -10%,rgba(63,193,184,.14),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(46,112,168,.14),transparent 60%);}}
+:root[data-theme="dark"]{
+  --glass:rgba(14,50,59,.72); --hair:rgba(143,211,196,.12); --hi:rgba(255,255,255,.10);
+  --elev-1:0 1px 1px rgba(0,0,0,.25),0 4px 12px rgba(0,0,0,.25);
+  --elev-2:0 2px 4px rgba(0,0,0,.3),0 14px 30px -10px rgba(0,0,0,.55);
+  --elev-3:0 2px 8px rgba(0,0,0,.4),0 30px 70px -14px rgba(0,0,0,.7);
+  --well:inset 0 2px 5px rgba(0,0,0,.35),inset 0 0 0 1px rgba(143,211,196,.08);
+  --btn-top:#18434d; --btn-bot:#113740; --btn-ledge:#061a1f;
+  --pri-top:#4fd0c6; --pri-bot:#2a9fa6; --pri-ledge:#0d5156;
+  --page-glow:radial-gradient(1100px 520px at 100% -10%,rgba(63,193,184,.14),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(46,112,168,.14),transparent 60%);}
+
+body{background:var(--page-glow),var(--bg);background-attachment:fixed;-webkit-font-smoothing:antialiased;letter-spacing:.1px}
+::selection{background:rgba(63,193,184,.35)}
+
+/* ---- top deck: frosted glass ---- */
+.deck{background:var(--glass);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  border-bottom:1px solid var(--hair);box-shadow:0 1px 0 var(--hi) inset,0 10px 30px -18px rgba(14,58,68,.35);padding-block:14px 12px;gap:12px}
+body::before{background:var(--glass)}
+
+/* brand lockup with a 3D monogram */
+.brand{align-items:center;gap:12px}
+.brand::before{content:"נ";display:grid;place-items:center;width:42px;height:42px;border-radius:12px;flex:none;
+  font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1;color:#fff;padding-bottom:3px;
+  background:linear-gradient(155deg,var(--teal-br) 0%,var(--teal) 45%,var(--teal-edge) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(8,35,42,.25),0 3px 0 var(--pri-ledge),0 10px 20px -6px rgba(28,123,130,.55);
+  text-shadow:0 1px 1px rgba(8,35,42,.35)}
+.brand h1{font-size:24px;font-weight:700;letter-spacing:0;line-height:1.1}
+.brand .sign{font-size:12px;padding:3px 10px;border-radius:999px;color:var(--petrol);
+  background:linear-gradient(180deg,#b5e6db,var(--mint));box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 0 rgba(14,58,68,.18)}
+.brand small{font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--surface-2);box-shadow:var(--well)}
+
+/* ---- 3D buttons ---- */
+.btn{position:relative;border:1px solid var(--line);border-radius:11px;padding:8px 15px;font-weight:600;
+  background:linear-gradient(180deg,var(--btn-top),var(--btn-bot));color:var(--ink);
+  box-shadow:inset 0 1px 0 var(--hi),0 2px 0 var(--btn-ledge),0 6px 14px -8px rgba(14,58,68,.35);
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease),filter .14s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:linear-gradient(180deg,var(--btn-top),var(--btn-bot));transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 var(--hi),0 3px 0 var(--btn-ledge),0 12px 22px -10px rgba(14,58,68,.4)}
+.btn:active{transform:translateY(2px);box-shadow:inset 0 1px 2px rgba(14,58,68,.15),0 0 0 var(--btn-ledge),0 2px 4px -2px rgba(14,58,68,.3)}
+.btn.primary{border:1px solid var(--pri-ledge);color:#fff;text-shadow:0 1px 1px rgba(8,35,42,.35);
+  background:linear-gradient(180deg,var(--pri-top) 0%,var(--teal) 48%,var(--pri-bot) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 4px rgba(8,35,42,.18),0 3px 0 var(--pri-ledge),0 10px 20px -8px rgba(28,123,130,.65)}
+.btn.primary:hover{filter:brightness(1.06) saturate(1.05);background:linear-gradient(180deg,var(--pri-top) 0%,var(--teal) 48%,var(--pri-bot) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 4px rgba(8,35,42,.18),0 4px 0 var(--pri-ledge),0 16px 26px -10px rgba(28,123,130,.7)}
+.btn.primary:active{box-shadow:inset 0 2px 4px rgba(8,35,42,.35),0 0 0 var(--pri-ledge),0 3px 6px -3px rgba(28,123,130,.6)}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:9px}
+.btn[disabled]{opacity:.5;transform:none;cursor:not-allowed}
+:focus-visible{outline:none;box-shadow:var(--ring)!important}
+
+/* ---- tabs: raised segmented rail ---- */
+.tabs{border-bottom:0;gap:6px;padding:6px;margin-inline:0;border-radius:14px;background:var(--surface-2);box-shadow:var(--well)}
+.tab{border:1px solid transparent;border-radius:10px;padding:7px 13px;font-weight:500;color:var(--muted);background:transparent;transition:all .15s var(--ease)}
+.tab:hover{color:var(--ink);background:var(--surface);box-shadow:var(--elev-1)}
+.tab b{color:var(--ink);opacity:.75}
+.tab.drv{border-top:1px solid transparent;position:relative}
+.tab.drv::after{content:"";position:absolute;inset-inline:12px;bottom:3px;height:2px;border-radius:2px;background:var(--mint)}
+.tab[aria-selected="true"]{color:#fff;border-color:var(--petrol-2);
+  background:linear-gradient(180deg,#17505c,var(--petrol));box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 var(--petrol-2),0 8px 16px -8px rgba(8,35,42,.7)}
+.tab[aria-selected="true"] b{color:var(--mint);opacity:1}
+
+/* ---- status chips ---- */
+.pipe{gap:8px;padding:2px 2px 6px}
+.chip{border:1px solid var(--line);padding:6px 13px;font-weight:500;background:linear-gradient(180deg,var(--btn-top),var(--btn-bot));
+  box-shadow:inset 0 1px 0 var(--hi),0 2px 0 var(--btn-ledge),0 4px 10px -6px rgba(14,58,68,.3);transition:transform .14s var(--ease),box-shadow .14s var(--ease)}
+.chip:hover{transform:translateY(-1px)}
+.chip:active{transform:translateY(2px);box-shadow:inset 0 1px 2px rgba(14,58,68,.15)}
+.chip .dot{width:9px;height:9px;box-shadow:inset 0 -1px 1px rgba(0,0,0,.25),0 0 0 2px rgba(255,255,255,.6),0 0 8px currentColor}
+.chip[aria-pressed="true"]{color:#fff;border-color:var(--petrol-2);background:linear-gradient(180deg,#17505c,var(--petrol));
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.35),0 1px 0 var(--hi)}
+.chip[aria-pressed="true"] b{color:var(--mint)}
+.chip.follow{border-style:dashed;background:linear-gradient(180deg,var(--surface),var(--surface-2))}
+
+/* ---- recessed fields ---- */
+.filters{gap:10px}
+.filters input[type=search],.filters select,.edit-grid input,.edit-grid select,textarea,.form-grid input,.form-grid select{
+  border:1px solid var(--line);border-radius:11px;background:var(--surface);box-shadow:var(--well);padding:9px 12px;transition:box-shadow .15s,border-color .15s}
+.filters input[type=search]{padding-inline-start:38px;
+  background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232aa3ad' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat right 13px center}
+.filters input:focus,.filters select:focus,.edit-grid input:focus,.edit-grid select:focus,textarea:focus,.form-grid input:focus,.form-grid select:focus{
+  outline:none;border-color:var(--teal);box-shadow:var(--well),var(--ring)}
+
+/* ---- list: floating cards ---- */
+main{padding-block:18px 60px}
+.status-line{font-size:12.5px;margin-bottom:12px}
+.group-h{background:transparent;border-bottom:0;padding:16px 4px 10px;font-size:17px;font-weight:700;align-items:center;gap:10px;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.group-h::before{content:"";width:8px;height:8px;border-radius:50%;flex:none;background:var(--teal);box-shadow:0 0 0 4px rgba(42,163,173,.18)}
+.group-h span{padding:2px 9px;border-radius:999px;background:var(--surface);box-shadow:var(--elev-1)}
+.list{gap:8px;margin-bottom:10px}
+.row{border:1px solid var(--hair);border-radius:14px;padding:12px 14px;background:linear-gradient(180deg,var(--surface),var(--surface));
+  box-shadow:inset 0 1px 0 var(--hi),var(--elev-1);transition:transform .16s var(--ease),box-shadow .16s var(--ease),border-color .16s}
+.row:hover{background:var(--surface);transform:translateY(-2px);border-color:rgba(42,163,173,.35);box-shadow:inset 0 1px 0 var(--hi),var(--elev-2)}
+.row:active{transform:translateY(0)}
+.row .nm{font-size:14.5px}
+.row .ph{font-weight:600}
+.dial-row{display:inline-block;padding:4px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent);
+  box-shadow:inset 0 1px 0 var(--hi),0 1px 0 rgba(14,58,68,.12)}
+.dial-row:hover{text-decoration:none;filter:brightness(.97)}
+.pill{border-radius:999px;padding:3px 10px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.06),0 1px 2px rgba(14,58,68,.1)}
+.tag{border-radius:999px;padding:0 7px;background:var(--surface-2)}
+.tag.lic{border-color:transparent;background:linear-gradient(180deg,#b5e6db,var(--mint));color:var(--petrol);font-weight:600}
+.tag.fu{background:linear-gradient(180deg,#ffd77a,#e9b53c);border-color:#c8951f;color:#3a2a05;font-weight:600}
+.tag.cv{background:var(--accent-soft)}
+
+/* ---- side sheet: elevated panel ---- */
+.scrim{background:rgba(8,35,42,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.sheet{border-radius:0 22px 22px 0;box-shadow:var(--elev-3);border-inline-start:1px solid var(--hair);overflow:hidden}
+.sheet header{padding:20px 22px 16px;border-bottom:0;color:#fff;position:relative;
+  background:radial-gradient(400px 160px at 90% 0%,rgba(63,193,184,.45),transparent 70%),linear-gradient(160deg,#145063,var(--petrol) 55%,var(--petrol-2))}
+.sheet header::after{content:"";position:absolute;inset:auto 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(143,211,196,.6),transparent)}
+.sheet header h2{font-size:26px}
+.sheet header .meta{color:rgba(230,241,240,.75)}
+.sheet .x{color:#fff;width:36px;height:36px;border-radius:10px;padding:0;background:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 2px 0 rgba(0,0,0,.25);transition:transform .14s var(--ease)}
+.sheet .x:hover{background:rgba(255,255,255,.2)}
+.sheet .x:active{transform:translateY(2px)}
+.sheet .body{padding:18px 22px 28px;gap:18px;background:var(--page-glow),var(--bg)}
+.sec{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:14px 16px;box-shadow:inset 0 1px 0 var(--hi),var(--elev-1)}
+.sec h3{font-size:12px;letter-spacing:.4px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec h3::before{content:"";width:4px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--teal-br),var(--teal-edge))}
+.phone-box{border-radius:16px;padding:14px 16px;background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--hair);box-shadow:inset 0 1px 0 var(--hi),var(--elev-2)}
+.phone-box .num{font-size:24px;font-weight:700;letter-spacing:.5px}
+.phone-box a:not(.btn){padding:6px 12px;border-radius:9px;color:#fff;font-weight:600;
+  background:linear-gradient(180deg,#3ed37a,#1f9d55);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 2px 0 #12673a,0 8px 14px -8px rgba(31,157,85,.7)}
+.phone-box a.dial{color:#fff}
+.call{border-inline-start:0;border-radius:12px;padding:10px 12px;background:var(--surface-2);box-shadow:var(--well);position:relative;padding-inline-start:18px}
+.call::before{content:"";position:absolute;inset-inline-start:7px;top:12px;bottom:12px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--teal-br),var(--teal-edge))}
+.reason,.imp-stats div{border-radius:12px;box-shadow:var(--well)}
+.imp-stats b{font-family:var(--f-display)}
+.meter{height:12px;border-radius:999px;box-shadow:var(--well)}
+.meter i{border-radius:999px;background:linear-gradient(180deg,var(--teal-br),var(--teal-edge));box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.cvview{border-radius:12px;box-shadow:var(--well);padding:8px}
+.cvview canvas,.cvview img,.cvview .doc{box-shadow:var(--elev-1);border-radius:8px}
+
+.deck{grid-template-columns:minmax(0,1fr)}
+.top>*{min-width:0}
+.brand{flex-wrap:wrap;row-gap:6px}
+@media (max-width:760px){
+  .top{gap:8px}
+  .brand{flex:1 1 100%}
+  .brand small{display:none}
+  .top .btn{flex:1 1 auto;justify-content:center}
+  .filters input[type=search]{flex:1 1 100%}
+  .filters select{flex:1 1 40%;min-width:0}
+  .brand::before{width:36px;height:36px;font-size:20px;border-radius:10px}
+  .brand h1{font-size:20px}
+  .row{padding:11px 12px}
+  .sheet{border-radius:0}
+}
+@media (prefers-reduced-motion:reduce){.btn,.chip,.row,.tab{transition:none}.row:hover,.btn:hover,.chip:hover{transform:none}}
+</style>
+
+<div class="deck" id="deck">
+  <div class="top">
+    <div class="brand"><h1>נועה גיוס והשמה</h1><span class="sign">לידים</span><small id="total">טוען מועמדים…</small></div>
+    <button class="btn" id="importBtn" type="button" hidden>ייבוא קורות חיים</button>
+    <button class="btn" id="exportBtn" type="button">ייצוא לאקסל</button>
+    <button class="btn primary" id="addBtn" type="button">+ ליד חדש</button>
+  </div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="תחומים"></div>
+  <div class="pipe" id="pipe" role="toolbar" aria-label="סינון לפי סטטוס"></div>
+  <div class="filters">
+    <input type="search" id="q" placeholder="חיפוש לפי שם, טלפון, עיר, חברה או תפקיד" aria-label="חיפוש">
+    <select id="fCity" aria-label="עיר"></select>
+    <select id="fSort" aria-label="מיון">
+      <option value="city">מיון: לפי עיר</option>
+      <option value="new">מיון: הגשה חדשה קודם</option>
+      <option value="old">מיון: הגשה ישנה קודם</option>
+      <option value="name">מיון: לפי שם</option>
+      <option value="touched">מיון: עודכן לאחרונה</option>
+    </select>
+  </div>
+</div>
+
+<main>
+  <p class="status-line" id="statusLine"><span>טוען את רשימת המועמדים…</span></p>
+  <div id="out"><div class="empty">המועמדים מהמייל נטענים. כל ליד יופיע כאן עם טלפון, עיר, חברה וסטטוס.</div></div>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" hidden aria-modal="true" role="dialog" aria-labelledby="shName"></aside>
+
+<meta name="robots" content="noindex,nofollow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="adapter.js"></script>
+<script>
+(function(){
+const GROUPS=[
+  {k:'all',t:'הכל'},
+  {k:'טרם נבדק',t:'טרם נבדק',c:'g-new',dot:'var(--st-new)'},
+  {k:'ממתין לתשובה',t:'ממתין לתשובה',c:'g-wait',dot:'var(--st-wait)'},
+  {k:'זומן / עבר ראיון',t:'זומן / עבר ראיון',c:'g-int',dot:'var(--st-int)'},
+  {k:'בתהליך',t:'בתהליך',c:'g-proc',dot:'var(--st-proc)'},
+  {k:'התקבל לעבודה',t:'התקבל לעבודה',c:'g-hired',dot:'var(--st-hired)'},
+  {k:'לא רלוונטי',t:'לא רלוונטי',c:'g-no',dot:'var(--st-no)'},
+];
+const GCLASS=Object.fromEntries(GROUPS.filter(g=>g.c).map(g=>[g.k,g.c]));
+const STATUSES=['טרם נבדק','אין תגובה','לא ענה - לחזור','ממתין לתשובת מעסיק','ממתין לתשובה שלנו','זומן לראיון','זומן ליום ניסיון','עבר ראיון - חיובי','בתהליך','ממתין להשלמת מסמכים','התקבל לעבודה','לא רלוונטי','לא רלוונטי - לא מעוניין','לא רלוונטי - מצא עבודה','לא רלוונטי - מיקום','לא רלוונטי - שכר','לא רלוונטי - הבריז','לא רלוונטי - עזב','לא רלוונטי - פוטר'];
+const FIELDS=['נהגים','מחסן / לוגיסטיקה','משרד / שירות לקוחות','ניהול / פיקוח','מכירות','טכנאים','ייצור / הרכבה','מלגזנים','הנהלת חשבונות','מזון / קייטרינג','עוזרי נהג','מנופאים','חשמלאים','אחזקה','קמעונאות / חנויות','ניקיון','הנדסה','אבטחה','כללי'];
+const LICS=['ב','C1 - עד 12 טון','C - עד 15 ומעל','E - סמיטריילר','D - אוטובוס','לא צוין'];
+function grp(s){s=s||'';
+  if(!s||s.startsWith('טרם נבדק'))return 'טרם נבדק';
+  if(s.startsWith('לא רלוונטי')||s.startsWith('עזב')||s.startsWith('פוטר'))return 'לא רלוונטי';
+  if(s.startsWith('זומן')||s.startsWith('עבר')||s.startsWith('עברה')||s.startsWith('אושר'))return 'זומן / עבר ראיון';
+  if(s.startsWith('בתהליך')||s.startsWith('ממתין להשלמת'))return 'בתהליך';
+  if(s.startsWith('התקבל'))return 'התקבל לעבודה';
+  return 'ממתין לתשובה';}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const digits=p=>String(p||'').replace(/\D/g,'');
+const today=()=>new Date().toISOString().slice(0,10);
+const fmtDate=d=>d?d.split('-').reverse().join('.'):'';
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+let RMPH=new Set();
+let BASE=[], ADDED=[], EDITS={}, byId=new Map();
+let db=null, downloads=null, canWrite=true, dbState='loading';
+const st=Object.assign({g:'all',q:'',field:'',lic:'',city:'',sort:'city',fu:false},LS.get('leads.filters',{}));st.q='';
+let shown=150, openKey=null;
+
+// ---------- data
+function key(l){return l.ids[0]}
+function eff(l){const e=EDITS[l._k]||{};return {
+  status:e.status??l.s, phone:e.phone??l.p, city:e.city??l.c, followUp:e.followUp||'', calls:e.calls||[], touched:e.updatedAt||'', removed:!!e.removed, removedReason:e.removedReason||'', removedAt:e.removedAt||'',
+}}
+function all(){return BASE.concat(ADDED)}
+function indexLeads(){byId=new Map();for(const l of all()){for(const id of l.ids)byId.set(id,l);}}
+function remapEdits(raw){ // edit docs are keyed by any of the lead's thread ids
+  const out={};for(const [id,v] of Object.entries(raw)){const l=byId.get(id);if(l){out[l._k]=Object.assign(out[l._k]||{},v);}}
+  EDITS=out;}
+let RAW={};
+
+fetch('leads.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(j=>{
+  BASE=j.map(l=>(l._k=key(l),l));indexLeads();remapEdits(RAW);buildSelects();render();
+}).catch(()=>{$('out').innerHTML='<div class="empty">לא הצלחתי לטעון את רשימת המועמדים. רענן את הדף.</div>'});
+
+(async()=>{
+  try{db=await window.claude?.use?.('db');}catch(e){db=null}
+  try{downloads=await window.claude?.use?.('downloads');}catch(e){downloads=null}
+  try{const u=await window.claude?.use?.('user');if(u){const w=await u.can('data.write');if(w===false)canWrite=false;}}catch(e){}
+  try{assets=await window.claude?.use?.('assets');}catch(e){assets=null}
+  if(!db){dbState='off';render();return;}
+  db.collection('cv').onSnapshot(snap=>{const o={};snap.docs.forEach(d=>o[d.id]=d.data());CVIDX=o;render();if(impOpen)drawImport();},e=>{});
+  if(assets){getMcp().then(m=>{if(m)$('importBtn').hidden=false})}
+  const timer=setTimeout(()=>{if(dbState==='loading'){dbState='slow';render();}},10000);
+  db.collection('edits').onSnapshot(snap=>{
+    if(!snap.metadata.fromCache){clearTimeout(timer);dbState='ok';}
+    RAW={};snap.docs.forEach(d=>RAW[d.id]=d.data());remapEdits(RAW);render();if(openKey)refreshSheet();
+  },e=>{clearTimeout(timer);dbState='err';render();});
+  db.collection('added').onSnapshot(snap=>{
+    const baseIds=new Set();BASE.forEach(l=>l.ids.forEach(i=>baseIds.add(i)));
+    const basePh=new Set();BASE.forEach(l=>{const d=digits(l.p);if(d)basePh.add(d)});
+    ADDED=snap.docs.filter(d=>{if(baseIds.has(d.id))return false;const ph=digits((d.data()||{}).p);if(ph){if(basePh.has(ph))return false;basePh.add(ph)}return true}).map(d=>{const v=d.data();return {fromMail:v.src==='mail',ids:[d.id],_k:d.id,n:v.n||'',p:v.p||'',a:v.a||'',c:v.c||'',f:v.f||'כללי',r:v.r||'',co:v.co||'',s:v.s||'טרם נבדק',rs:v.rs||'',d:v.d||'',no:v.src==='mail'?'נכנס אוטומטית מהמייל':'נוסף ידנית',l:v.l||'',added:true}});
+    indexLeads();remapEdits(RAW);buildSelects();render();if(openKey)refreshSheet();
+  },e=>{});
+})();
+
+// ---------- filters UI
+function buildSelects(){
+  const A=all();
+  const fc={};A.forEach(l=>{if(l.f!=='נהגים')fc[l.f]=(fc[l.f]||0)+1});
+  const lc={};A.forEach(l=>{if(l.f==='נהגים'){const k=l.l||'לא צוין';lc[k]=(lc[k]||0)+1}});
+  const tabs=[{f:'',l:'',t:'כל המועמדים',n:A.length}]
+    .concat(LICS.filter(x=>lc[x]).map(x=>({f:'נהגים',l:x,t:x==='ב'?'נהגים - רישיון ב':x==='לא צוין'?'נהגים - רישיון לא צוין':'נהגים '+x,n:lc[x],drv:1})))
+    .concat(Object.keys(fc).sort((a,b)=>(a==='כללי')-(b==='כללי')||fc[b]-fc[a]).map(f=>({f,l:'',t:f.replace(' / ',' - '),n:fc[f]})));
+  $('tabs').innerHTML=tabs.map(t=>`<button type="button" role="tab" class="tab${t.drv?' drv':''}" data-f="${esc(t.f)}" data-l="${esc(t.l)}" aria-selected="${st.field===t.f&&st.lic===t.l}">${esc(t.t)}<b>${t.n.toLocaleString('he-IL')}</b></button>`).join('');
+  const cc={};A.forEach(l=>{const c=(eff(l).city||'').trim();if(c&&!c.startsWith('('))cc[c]=(cc[c]||0)+1});
+  const cities=Object.keys(cc).sort((a,b)=>a.localeCompare(b,'he'));
+  $('fCity').innerHTML=['<option value="">כל הערים</option>','<option value="__none">בלי עיר</option>'].concat(cities.map(c=>`<option value="${esc(c)}">${esc(c)} (${cc[c]})</option>`)).join('');$('fCity').value=st.city;
+}
+function saveFilters(){LS.set('leads.filters',{g:st.g,field:st.field,lic:st.lic,city:st.city,sort:st.sort,fu:st.fu})}
+$('q').addEventListener('input',e=>{st.q=e.target.value.trim();shown=150;render()});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;st.field=b.dataset.f;st.lic=b.dataset.l;shown=150;saveFilters();
+  $('tabs').querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===b));render()});
+$('fCity').addEventListener('change',e=>{st.city=e.target.value;shown=150;saveFilters();render()});
+$('fSort').addEventListener('change',e=>{st.sort=e.target.value;shown=150;saveFilters();render()});
+$('fSort').value=st.sort;
+
+function matches(l,E,ignoreGroup){
+  if(!!E.removed!==!!st.rm)return false;
+  if(!E.removed&&RMPH.size&&RMPH.has(digits(E.phone)))return false;
+  if(st.field&&l.f!==st.field)return false;
+  if(st.lic&&(l.l||'לא צוין')!==st.lic)return false;
+  const city=(E.city||'').trim();
+  if(st.city==='__none'){if(city&&!city.startsWith('('))return false}else if(st.city&&city!==st.city)return false;
+  if(!ignoreGroup){
+    if(st.fu){if(!E.followUp||E.followUp>today())return false}
+    else if(st.g!=='all'&&grp(E.status)!==st.g)return false;
+  }
+  if(st.q){const q=st.q.toLowerCase(),qd=digits(st.q);
+    const hay=(l.n+' '+city+' '+l.co+' '+l.r+' '+E.status).toLowerCase();
+    if(!(hay.includes(q)||(qd.length>=3&&digits(E.phone).includes(qd))))return false;}
+  return true;
+}
+
+function render(){
+  const A=all();
+  const effs=new Map(A.map(l=>[l,eff(l)]));
+  RMPH=new Set();for(const [l,E] of effs){if(E.removed){const d=digits(E.phone);if(d)RMPH.add(d)}}
+  // pipeline counts reflect the other filters
+  const cnt={all:0};let fuCount=0,rmCount=0;for(const l of A){const E=effs.get(l);if(E.removed)rmCount++}
+  for(const l of A){const E=effs.get(l);if(!matches(l,E,true))continue;cnt.all++;const g=grp(E.status);cnt[g]=(cnt[g]||0)+1;if(E.followUp&&E.followUp<=today())fuCount++;}
+  $('pipe').innerHTML=GROUPS.map(g=>`<button type="button" class="chip" data-g="${esc(g.k)}" aria-pressed="${!st.fu&&st.g===g.k}">${g.dot?`<span class="dot" style="background:${g.dot}"></span>`:''}${esc(g.t)} <b>${(cnt[g.k]||0).toLocaleString('he-IL')}</b></button>`).join('')
+    +`<button type="button" class="chip follow" data-fu="1" aria-pressed="${st.fu}">לחזור אליהם היום <b>${fuCount}</b></button>`
+    +`<button type="button" class="chip follow" data-rm="1" aria-pressed="${!!st.rm}">הוסרו מהמערכת <b>${rmCount}</b></button>`;
+  $('total').textContent=A.length?`${A.length.toLocaleString('he-IL')} מועמדים`:'טוען מועמדים…';
+  let rows=A.filter(l=>matches(l,effs.get(l),false));
+  const byCity=(a,b)=>{const ca=(effs.get(a).city||'').trim(),cb=(effs.get(b).city||'').trim();const na=!ca||ca.startsWith('('),nb=!cb||cb.startsWith('(');if(na!==nb)return na?1:-1;return ca.localeCompare(cb,'he')||(b.d||'').localeCompare(a.d||'')};
+  const cmp={city:byCity,new:(a,b)=>(b.d||'').localeCompare(a.d||''),old:(a,b)=>(a.d||'').localeCompare(b.d||''),name:(a,b)=>a.n.localeCompare(b.n,'he'),touched:(a,b)=>(effs.get(b).touched||'').localeCompare(effs.get(a).touched||'')||(b.d||'').localeCompare(a.d||'')}[st.sort];
+  rows.sort(cmp);
+  const sl=[];
+  sl.push(`<span>${rows.length.toLocaleString('he-IL')} תוצאות</span>`);
+  if(dbState==='off')sl.push('<span class="warn">שמירת שינויים לא זמינה בתצוגה הזו. אפשר לצפות ולחפש.</span>');
+  if(dbState==='slow')sl.push('<span class="warn">העדכונים השמורים עדיין נטענים…</span>');
+  if(dbState==='err')sl.push('<span class="warn">לא הצלחתי לטעון את העדכונים השמורים. רענן את הדף.</span>');
+  if(!canWrite)sl.push('<span class="warn">יש לך הרשאת צפייה בלבד.</span>');
+  $('statusLine').innerHTML=sl.join('');
+  if(!BASE.length){return}
+  if(!rows.length){$('out').innerHTML='<div class="empty">אין מועמדים שמתאימים לסינון הזה. נסה לנקות את החיפוש או לבחור "הכל".</div>';return}
+  const part=rows.slice(0,shown);
+  let html='',cur=null,buf='';
+  const counts={};if(st.sort==='city')rows.forEach(l=>{const c=cityLabel(effs.get(l).city);counts[c]=(counts[c]||0)+1});
+  for(const l of part){
+    const E=effs.get(l);
+    if(st.sort==='city'){const c=cityLabel(E.city);if(c!==cur){if(cur!==null)html+=`<div class="list">${buf}</div>`;buf='';cur=c;html+=`<div class="group-h">${esc(c)} <span>${counts[c]} מועמדים</span></div>`;}}
+    buf+=rowHtml(l,E);
+  }
+  html+=`<div class="list">${buf}</div>`;
+  if(rows.length>shown)html+=`<div class="more"><button class="btn" type="button" id="moreBtn">הצג עוד ${Math.min(300,rows.length-shown)} (מתוך ${rows.length-shown} נוספים)</button></div>`;
+  $('out').innerHTML=html;
+  const deckH=$('deck').offsetHeight;document.documentElement.style.setProperty('--deck-h',deckH+'px');
+}
+function cityLabel(c){c=(c||'').trim();return (!c||c.startsWith('('))?'בלי עיר':c}
+function rowHtml(l,E){
+  const g=grp(E.status);
+  const fu=E.followUp&&E.followUp<=today()?'<span class="tag fu">לחזור</span>':'';
+  const lic=l.f==='נהגים'&&l.l&&l.l!=='לא צוין'?`<span class="tag lic">${esc(l.l.split(' ')[0])}</span>`:'';
+  const cvTag=CVIDX[l._k]&&CVIDX[l._k].a?'<span class="tag cv">קו"ח</span>':'';
+  const calls=E.calls.length?`<span class="tag">${E.calls.length} שיחות</span>`:'';
+  return `<div class="row" role="button" tabindex="0" data-k="${esc(l._k)}">
+    <div class="who"><div class="nm">${esc(l.n||'ללא שם')}${lic}${fu}${cvTag}${calls}</div><div class="sub">${esc(cityLabel(E.city))}${l.a?' · גיל '+esc(l.a):''}</div></div>
+    <div class="job"><div>${esc(l.r||'')}</div><div class="sub">${esc(l.co||'')}</div></div>
+    <div class="ph">${E.phone?`<a class="dial-row" href="tel:${esc(digits(E.phone))}" target="_blank" rel="noopener" title="חייג">${esc(E.phone)}</a>`:'—'}</div>
+    <div class="st"><span class="pill ${GCLASS[g]}" title="${esc(E.status)}">${esc(E.status||'טרם נבדק')}</span></div>
+    <div class="dt">${fmtDate(l.d)}</div></div>`;
+}
+$('pipe').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rm){st.rm=!st.rm;st.fu=false;st.g='all'}else if(b.dataset.fu){st.fu=!st.fu;st.rm=false}else{st.fu=false;st.rm=false;st.g=b.dataset.g}shown=150;saveFilters();render()});
+$('out').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=e.target.closest('.row');if(r&&e.target===r)openSheet(r.dataset.k)}});
+$('out').addEventListener('click',e=>{if(e.target.closest('.dial-row'))return;if(e.target.id==='moreBtn'){shown+=300;render();return}const r=e.target.closest('.row');if(r)openSheet(r.dataset.k)});
+
+// ---------- sheet
+function findLead(k){return all().find(l=>l._k===k)}
+function openSheet(k){openKey=k;refreshSheet();$('scrim').hidden=false;$('sheet').hidden=false;setTimeout(()=>{const c=$('sheet').querySelector('.x');c&&c.focus()},30)}
+function closeSheet(){impOpen=false;openKey=null;$('scrim').hidden=true;$('sheet').hidden=true;$('sheet').innerHTML=''}
+$('scrim').addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sheet').hidden)closeSheet()});
+function waLink(p){let d=digits(p);if(d.startsWith('0'))d='972'+d.slice(1);return d.length>=11?'https://wa.me/'+d:''}
+function gmail(id){return 'https://mail.google.com/mail/?authuser=a0507474544@gmail.com#all/'+id}
+let draftKeep={};
+function refreshSheet(){
+  if(openKey==='__new'||openKey==='__import'){return}
+  const l=findLead(openKey);if(!l){closeSheet();return}
+  const E=eff(l);const sh=$('sheet');
+  // keep typed text across live refreshes
+  const prevNote=sh.querySelector('#callText')?.value;
+  const opts=(STATUSES.includes(E.status)?STATUSES:[E.status].concat(STATUSES)).map(s=>`<option ${s===E.status?'selected':''}>${esc(s)}</option>`).join('');
+  const wa=waLink(E.phone);
+  const ro=(!db||!canWrite)?'disabled':'';
+  sh.innerHTML=`
+  <header><div><h2 id="shName">${esc(l.n||'ללא שם')}</h2><div class="meta">${esc(l.r||'')}${l.co?' · '+esc(l.co):''}</div></div><button class="x" type="button" aria-label="סגירה">×</button></header>
+  <div class="body">
+    <div class="phone-box"><span class="num">${esc(E.phone||'אין טלפון')}</span>
+      ${E.phone?`<a class="btn primary small dial" href="tel:${esc(digits(E.phone))}" target="_blank" rel="noopener">📞 חייג</a><button class="btn small" type="button" id="copyPh">העתק</button><button class="btn small" type="button" id="qrBtn">חייג מהטלפון (QR)</button>`:''}
+      ${wa?`<a href="${wa}" target="_blank" rel="noopener">וואטסאפ</a>`:''}
+    </div>
+    <div id="qrBox" hidden style="display:grid;justify-items:center;gap:6px;padding:10px;background:#fff;border-radius:10px"><div id="qrCode"></div><div style="color:#143038;font-size:13px">סרוק עם המצלמה של הטלפון, והטלפון יחייג למועמד</div></div>
+    ${(!l.added||l.fromMail)?`<div class="sec"><h3>קורות חיים</h3>
+      <div class="cvbar"><button class="btn small" type="button" id="cvBtn">הצג קורות חיים</button><button class="btn small" type="button" id="cvDl" hidden>הורד קובץ</button><span id="cvMsg" class="cvname"></span></div>
+      <div class="cvview" id="cvView"></div></div>`:''}
+    ${E.removed?`<div class="reason" style="border-inline-start:3px solid var(--st-no)"><b>הוסר מהמערכת</b>${E.removedReason?' · '+esc(E.removedReason):''}${E.removedAt?' · '+esc(new Date(E.removedAt).toLocaleDateString('he-IL')):''}<div style="margin-top:8px"><button class="btn small" type="button" id="unRm" ${ro}>החזר למערכת</button></div></div>`:''}
+    <div class="sec"><h3>עדכון</h3>
+      <div class="edit-grid">
+        <label>סטטוס<select id="eStatus" ${ro}>${opts}</select></label>
+        <label>לחזור אליו בתאריך<input type="date" id="eFollow" value="${esc(E.followUp)}" ${ro}></label>
+        <label>טלפון<input id="ePhone" value="${esc(E.phone)}" inputmode="tel" ${ro}></label>
+        <label>עיר מגורים<input id="eCity" value="${esc((E.city||'').startsWith('(')?'':E.city)}" ${ro}></label>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center"><button class="btn primary small" type="button" id="saveEdit" ${ro}>שמור עדכון</button><span id="editMsg"></span></div>
+      ${E.removed?'':`<div style="margin-top:10px"><button class="btn small" type="button" id="rmBtn" ${ro} style="color:var(--st-no);border-color:var(--st-no)">הסר מהמערכת</button>
+      <div id="rmConfirm" hidden style="margin-top:8px;display:grid;gap:8px;background:var(--st-no-bg);padding:10px;border-radius:8px">
+        <label style="display:grid;gap:4px;font-size:12.5px">סיבת ההסרה<select id="rmReason"><option>ביקש לא להתקשר אליו יותר</option><option>ביקש למחוק את הפרטים שלו</option><option>מספר שגוי</option><option>אחר</option></select></label>
+        <div style="font-size:13px">המועמד ייעלם מהרשימה, ולא יופיע שוב גם אם יגיע מהמייל או ממערכת נועה. אפשר להחזיר אותו בכל רגע מ"הוסרו מהמערכת".</div>
+        <div style="display:flex;gap:8px"><button class="btn primary small" type="button" id="rmYes" style="background:var(--st-no);border-color:var(--st-no)">כן, הסר</button><button class="btn small" type="button" id="rmNo">ביטול</button></div></div></div>`}
+    </div>
+    <div class="sec"><h3>סיכום שיחה טלפונית</h3>
+      <textarea id="callText" placeholder="מה עלה בשיחה? זמינות, שכר מבוקש, רישיון, מתי לחזור…" ${ro}></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center"><button class="btn primary small" type="button" id="saveCall" ${ro}>שמור סיכום</button><span id="callMsg"></span></div>
+      <div class="calls">${E.calls.slice().reverse().map(c=>`<div class="call"><time>${esc(new Date(c.at).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'}))}</time>${esc(c.text)}</div>`).join('')||'<div class="sub" style="color:var(--muted);font-size:13px">עדיין אין סיכומי שיחה.</div>'}</div>
+    </div>
+    <div class="sec"><h3>מהמייל</h3>
+      ${l.rs?`<div class="reason">${esc(l.rs)}</div>`:''}
+      <dl class="facts" style="margin-top:10px">
+        <dt>תחום</dt><dd>${esc(l.f)}${l.l?' · רישיון '+esc(l.l):''}</dd>
+        <dt>תפקיד</dt><dd>${esc(l.r||'—')}</dd>
+        <dt>חברה</dt><dd>${esc(l.co||'—')}</dd>
+        ${l.a?`<dt>גיל</dt><dd>${esc(l.a)}</dd>`:''}
+        <dt>תאריך הגשה</dt><dd>${fmtDate(l.d)||'—'}</dd>
+        <dt>סטטוס מקורי</dt><dd>${esc(l.s||'—')}</dd>
+        ${l.no?`<dt>הערות</dt><dd>${esc(l.no)}</dd>`:''}
+        <dt>קורות חיים</dt><dd>${(()=>{const g=l.ids.filter(i=>!i.startsWith('b44_'));if(l.added&&!l.fromMail)return '—';if(!g.length)return l.src==='b44'?'נשמר במערכת נועה גיוס והשמה':'—';return g.map((id,i)=>`<a href="${gmail(id)}" target="_blank" rel="noopener" style="color:var(--accent)">פתח הגשה${g.length>1?' '+(i+1):''} במייל</a>`).join(' · ')})()}</dd>
+      </dl>
+    </div>
+  </div>`;
+  if(prevNote)sh.querySelector('#callText').value=prevNote;
+  sh.querySelector('.x').onclick=closeSheet;
+  const qb=sh.querySelector('#qrBtn');if(qb)qb.onclick=async()=>{const box=sh.querySelector('#qrBox');if(!box.hidden){box.hidden=true;return}
+    try{await loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');const el=sh.querySelector('#qrCode');el.innerHTML='';let d=digits(E.phone);if(d.startsWith('0'))d='+972'+d.slice(1);new window.QRCode(el,{text:'tel:'+d,width:180,height:180});box.hidden=false}catch(e){qb.textContent='לא הצלחתי ליצור קוד'}};
+  const cp=sh.querySelector('#copyPh');if(cp)cp.onclick=()=>{const t=E.phone;navigator.clipboard?.writeText(t).then(()=>{cp.textContent='הועתק'},()=>{selectText(sh.querySelector('.num'))})||selectText(sh.querySelector('.num'))};
+  sh.querySelector('#saveEdit').onclick=()=>saveEdit(l);
+  const rb=sh.querySelector('#rmBtn');if(rb){rb.onclick=()=>{sh.querySelector('#rmConfirm').hidden=false;rb.hidden=true};sh.querySelector('#rmNo').onclick=()=>{sh.querySelector('#rmConfirm').hidden=true;rb.hidden=false};
+    sh.querySelector('#rmYes').onclick=async()=>{const m=sh.querySelector('#editMsg');try{await writeEdit(l,{removed:true,removedReason:sh.querySelector('#rmReason').value,removedAt:new Date().toISOString()});closeSheet()}catch(e){m.className='err';m.textContent='ההסרה לא הצליחה. נסה שוב.'}}}
+  const ub=sh.querySelector('#unRm');if(ub)ub.onclick=async()=>{try{await writeEdit(l,{removed:false,removedReason:'',removedAt:''})}catch(e){}};
+  const cvb=sh.querySelector('#cvBtn');if(cvb){cvb.onclick=()=>showCV(l);sh.querySelector('#cvDl').onclick=()=>dlCV(l);if(CV.has(l._k))drawCV(l,CV.get(l._k));else if(CVIDX[l._k])showCV(l);}
+  sh.querySelector('#saveCall').onclick=()=>saveCall(l);
+}
+
+// ---------- CV from Gmail (viewer's own Gmail connector; nothing is stored)
+const CV=new Map();let mcp=null,mcpTried=false;
+async function getMcp(){if(!mcpTried){mcpTried=true;try{mcp=await window.claude?.use?.('mcp')}catch(e){mcp=null}}return mcp}
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const t=document.createElement('script');t.src=src;t.onload=res;t.onerror=rej;document.head.appendChild(t)})}
+const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+function b64urlToBin(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return atob(s)}
+function hdr(h,name){const m=h.match(new RegExp('^'+name+':[ \\t]*([^\\r\\n]*(?:\\r?\\n[ \\t][^\\r\\n]*)*)','im'));return m?m[1].replace(/\r?\n[ \t]+/g,' '):''}
+function param(v,name){const m=v.match(new RegExp(name+'\\*?=\\s*"?([^";]+)"?','i'));return m?m[1]:''}
+function decWord(s){return s.replace(/=\?([^?]+)\?([BQ])\?([^?]*)\?=/gi,(m,cs,enc,txt)=>{try{let bin=enc.toUpperCase()==='B'?atob(txt):txt.replace(/_/g,' ').replace(/=([0-9A-F]{2})/gi,(x,h)=>String.fromCharCode(parseInt(h,16)));return new TextDecoder(cs).decode(Uint8Array.from(bin,c=>c.charCodeAt(0)))}catch(e){return m}}).replace(/^UTF-8''/i,'').replace(/%([0-9A-F]{2})/gi,(m)=>{try{return decodeURIComponent(m)}catch(e){return m}})}
+function parts(str,out){const i=str.search(/\r?\n\r?\n/);if(i<0)return out;const h=str.slice(0,i),b=str.slice(i).replace(/^\r?\n\r?\n/,'');const ct=hdr(h,'content-type');
+  if(/^multipart\//i.test(ct)){const bd=param(ct,'boundary');if(bd){b.split('--'+bd).slice(1).forEach(p=>{if(!p.startsWith('--'))parts(p.replace(/^\r?\n/,''),out)})}}
+  else out.push({h,b,ct});return out}
+function pickAttachment(raw){
+  const list=parts(raw,[]).map(p=>{const cd=hdr(p.h,'content-disposition');const fn=decWord(param(cd,'filename')||param(p.ct,'name'));return Object.assign(p,{fn,cd,mt:(p.ct.split(';')[0]||'').trim().toLowerCase()})})
+    .filter(p=>p.fn||/^attachment/i.test(p.cd)||/pdf|word|officedocument|image\//.test(p.mt));
+  const score=p=>{const n=(p.fn||'').toLowerCase();return /\.pdf$/.test(n)||p.mt==='application/pdf'?4:/\.docx$/.test(n)||/wordprocessingml/.test(p.mt)?3:/\.doc$/.test(n)||p.mt==='application/msword'?2:/^image\//.test(p.mt)?1:0};
+  list.sort((a,b)=>score(b)-score(a));const a=list.find(p=>score(p)>0)||list[0];if(!a)return null;
+  const te=hdr(a.h,'content-transfer-encoding').toLowerCase();let bytes;
+  if(te.includes('base64')){const bin=atob(a.b.replace(/[^A-Za-z0-9+/=]/g,''));bytes=Uint8Array.from(bin,c=>c.charCodeAt(0))}else{bytes=Uint8Array.from(a.b,c=>c.charCodeAt(0)&255)}
+  const kind=score(a)===4?'pdf':score(a)===3?'docx':score(a)===2?'doc':score(a)===1?'img':'other';
+  return {bytes,kind,name:a.fn||('cv.'+(kind==='img'?'jpg':kind)),mt:a.mt||'application/octet-stream'}}
+const MCPMSG={needs_reauth:'החיבור ל-Gmail פג. חבר אותו מחדש ב-claude.ai, בהגדרות, תחת Connectors.',server_not_connected:'Gmail לא מחובר לחשבון שלך. הוסף אותו ב-claude.ai, בהגדרות, תחת Connectors.',selection_required:'יש לך יותר מחיבור Gmail אחד. בחר אחד בהודעה של claude.ai ונסה שוב.',not_in_manifest:'הדף לא קיבל אישור לקרוא מ-Gmail. לחץ שוב ואשר את הגישה.',approval_required:'צריך לאשר לדף לקרוא את קורות החיים מ-Gmail. לחץ שוב ואשר.',blocked_by_policy:'הארגון חוסם את הגישה ל-Gmail מהדף הזה.',server_unavailable:'Gmail לא זמין כרגע. נסה שוב בעוד רגע.',tool_error:'ההגשה לא נמצאה במייל שלך.'};
+async function fetchCV(l,bulk){
+  const co=bulk?{cache:false}:{cache:{staleTime:86400000,gcTime:604800000}};
+  const m=await getMcp();if(!m)throw {code:'no_mcp'};
+  let tids=l.ids.filter(i=>!i.startsWith('b44_'));
+  if(!tids.length){const ph=digits(eff(l).phone);if(ph.length>=9){try{const r=await m.callTool('Gmail','search_threads',{query:'"'+ph+'" OR "'+ph.replace(/^0(\d{2})/,'0$1-')+'"',pageSize:5},co);tids=((r.payload&&r.payload.threads)||[]).map(t=>t.id).filter(Boolean)}catch(e){if(e&&e.code!=='tool_error')throw e}}}
+  for(const id of tids.slice().reverse()){
+    let raw=null;
+    try{const r=await m.callTool('Gmail','get_message',{messageId:id,messageFormat:'RAW'},co);raw=r.payload&&r.payload.raw}
+    catch(e){if(e&&e.code!=='tool_error')throw e}
+    if(!raw){try{const t=await m.callTool('Gmail','get_thread',{threadId:id,messageFormat:'MINIMAL'},co);const first=t.payload&&t.payload.messages&&t.payload.messages[0];
+      if(first&&first.id&&first.id!==id){const r=await m.callTool('Gmail','get_message',{messageId:first.id,messageFormat:'RAW'},co);raw=r.payload&&r.payload.raw}}catch(e){if(e&&e.code!=='tool_error')throw e}}
+    if(raw){const a=pickAttachment(b64urlToBin(raw));if(a)return a}
+  }
+  return null}
+
+// ---------- stored CVs (assets + db "cv" collection, keyed by lead key)
+let assets=null,CVIDX={};
+const AS_TYPES=['application/pdf','image/png','image/jpeg','image/gif','image/webp'];
+async function storeCV(l,a){
+  if(!assets||!db)return false;
+  let blob,wrapped=false;
+  if(a.kind==='pdf')blob=new Blob([a.bytes],{type:'application/pdf'});
+  else if(a.kind==='img'&&AS_TYPES.includes(a.mt))blob=new Blob([a.bytes],{type:a.mt});
+  else{let bin='';for(let i=0;i<a.bytes.length;i+=32768)bin+=String.fromCharCode.apply(null,a.bytes.subarray(i,i+32768));
+    blob=new Blob([JSON.stringify({name:a.name,mt:a.mt,kind:a.kind,b64:btoa(bin)})],{type:'application/json'});wrapped=true;}
+  const r=await assets.upload(blob);
+  await db.collection('cv').doc(l._k).set({a:r.id,k:a.kind,n:a.name,mt:a.mt,w:wrapped,size:a.bytes.length,at:new Date().toISOString()});
+  return true}
+const PDFLIBSRC='https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+let bundle=null,bundleLock=Promise.resolve();const BUNDLES=new Map();
+let SMALL=false,usageAt=0;
+async function checkUsage(){if(!assets||Date.now()-usageAt<60000)return;usageAt=Date.now();try{const u=(await assets.list()).usage;if(u&&u.maxBytes)SMALL=u.bytes>u.maxBytes*0.8}catch(e){}}
+async function pdfToJpegs(bytes,maxPages){
+  await loadScript(PDFJS+'pdf.min.js');await loadScript(PDFJS+'pdf.worker.min.js');const lib=window.pdfjsLib;lib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';
+  const doc=await lib.getDocument({data:bytes.slice()}).promise;const out=[];
+  for(let i=1;i<=Math.min(doc.numPages,maxPages);i++){const pg=await doc.getPage(i);const v0=pg.getViewport({scale:1});const vp=pg.getViewport({scale:1000/v0.width});
+    const c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+    await pg.render({canvasContext:ctx,viewport:vp}).promise;const b=await new Promise(r=>c.toBlob(r,'image/jpeg',0.6));out.push({bytes:new Uint8Array(await b.arrayBuffer()),w:c.width,h:c.height})}
+  return out}
+function addToBundle(l,a){bundleLock=bundleLock.then(async()=>{
+  await checkUsage();
+  if(SMALL&&a.kind==='pdf'){try{const imgs=await pdfToJpegs(a.bytes,3);if(imgs.length)a=Object.assign({},a,{kind:'jpgpages',imgs,bytes:{length:imgs.reduce((x,y)=>x+y.bytes.length,0)}})}catch(e){}}
+  await loadScript(PDFLIBSRC);const P=window.PDFLib;
+  if(!bundle){const d=await P.PDFDocument.create();d.addPage([200,200]);bundle={doc:d,items:[],bytes:0}}
+  const b=bundle;const meta={k:'bundle',n:a.name,mt:a.mt,inner:a.kind,size:a.bytes.length};
+  try{
+    if(a.kind==='jpgpages'){meta.p0=b.doc.getPageCount();for(const im of a.imgs){const e=await b.doc.embedJpg(im.bytes);const pg=b.doc.addPage([im.w,im.h]);pg.drawImage(e,{x:0,y:0,width:im.w,height:im.h})}meta.pc=a.imgs.length;meta.inner='pdf';meta.img=true}
+    else if(a.kind==='pdf'){const src=await P.PDFDocument.load(a.bytes,{ignoreEncryption:true});const pages=await b.doc.copyPages(src,src.getPageIndices());meta.p0=b.doc.getPageCount();pages.forEach(pg=>b.doc.addPage(pg));meta.pc=pages.length;if(!pages.length)throw 0}
+    else if(a.kind==='img'&&(a.mt==='image/png'||a.mt==='image/jpeg')){const im=a.mt==='image/png'?await b.doc.embedPng(a.bytes):await b.doc.embedJpg(a.bytes);meta.p0=b.doc.getPageCount();const pg=b.doc.addPage([im.width,im.height]);pg.drawImage(im,{x:0,y:0,width:im.width,height:im.height});meta.pc=1}
+    else throw 0;
+  }catch(e){delete meta.p0;delete meta.pc;const an='f'+b.items.length+'_'+String(a.name||'cv').replace(/[^\w.\-]/g,'_');await b.doc.attach(a.bytes,an,{mimeType:a.mt||'application/octet-stream'});meta.att=an}
+  b.items.push({l,meta});b.bytes+=a.bytes.length;
+  if(b.bytes>8e6||b.items.length>=15)await flushBundleNow();
+});return bundleLock}
+function flushBundle(){bundleLock=bundleLock.then(flushBundleNow);return bundleLock}
+async function flushBundleNow(){
+  const b=bundle;bundle=null;if(!b||!b.items.length)return;
+  const bytes=await b.doc.save({useObjectStreams:true});
+  const r=await assets.upload(new Blob([bytes],{type:'application/pdf'}));
+  const at=new Date().toISOString();
+  for(const it of b.items){try{await db.collection('cv').doc(it.l._k).set(Object.assign({},it.meta,{a:r.id,at}))}catch(e){}}
+  impStats.ok+=b.items.length;
+}
+async function bundleBytes(id){if(BUNDLES.has(id))return BUNDLES.get(id);const res=await fetch('/_blob/'+id);if(!res.ok)throw new Error('missing');const u=new Uint8Array(await res.arrayBuffer());BUNDLES.clear();BUNDLES.set(id,u);return u}
+async function loadStoredCV(doc){
+  if(doc.k==='bundle'){
+    const all=await bundleBytes(doc.a);
+    if(doc.att){await loadScript(PDFJS+'pdf.min.js');await loadScript(PDFJS+'pdf.worker.min.js');const lib=window.pdfjsLib;lib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';
+      const pd=await lib.getDocument({data:all.slice()}).promise;const atts=await pd.getAttachments()||{};const hit=Object.values(atts).find(x=>x.filename===doc.att)||atts[doc.att];
+      if(!hit)throw new Error('missing');return {bytes:hit.content,kind:doc.inner,name:doc.n,mt:doc.mt}}
+    return {bytes:all,kind:'pdfrange',p0:doc.p0,pc:doc.pc,name:doc.n,mt:'application/pdf'}}
+  const res=await fetch('/_blob/'+doc.a);if(!res.ok)throw new Error('missing');
+  if(doc.w){const j=await res.json();const bin=atob(j.b64);return {bytes:Uint8Array.from(bin,c=>c.charCodeAt(0)),kind:j.kind,name:j.name,mt:j.mt}}
+  return {bytes:new Uint8Array(await res.arrayBuffer()),kind:doc.k,name:doc.n,mt:doc.mt}}
+async function showCV(l){
+  const sh=$('sheet'),msg=sh.querySelector('#cvMsg'),btn=sh.querySelector('#cvBtn');
+  if(CV.has(l._k)){drawCV(l,CV.get(l._k));return}
+  btn.disabled=true;msg.className='cvname';
+  try{const doc=CVIDX[l._k];
+    if(doc&&doc.a){msg.textContent='טוען את הקובץ…';const a=await loadStoredCV(doc);CV.set(l._k,a);if(openKey===l._k)drawCV(l,a);return}
+    if(doc&&doc.none){msg.textContent='אין קובץ קורות חיים בהגשה הזו.';return}
+    msg.textContent='מביא את הקובץ מהמייל…';
+    const a=await fetchCV(l);if(openKey!==l._k)return;
+    if(!a){msg.textContent='לא נמצא קובץ מצורף בהגשה הזו.';btn.disabled=false;try{await db&&db.collection('cv').doc(l._k).set({none:true,at:new Date().toISOString()})}catch(e){}return}
+    CV.set(l._k,a);drawCV(l,a);(assets?assets.list().then(r=>{const u=r.usage;if(!u||u.files<u.maxFiles-50)return storeCV(l,a)}):Promise.resolve()).catch(()=>{});}
+  catch(e){if(openKey!==l._k)return;btn.disabled=false;msg.className='err';
+    msg.textContent=e&&e.code==='no_mcp'?'הצגת קורות חיים זמינה רק כשהדף פתוח ב-claude.ai עם חשבון שמחובר ל-Gmail.':(MCPMSG[e&&e.code]||'לא הצלחתי להביא את הקובץ. נסה שוב.');}}
+async function drawCV(l,a){
+  const sh=$('sheet');if(openKey!==l._k)return;const view=sh.querySelector('#cvView'),msg=sh.querySelector('#cvMsg'),btn=sh.querySelector('#cvBtn');
+  btn.hidden=true;sh.querySelector('#cvDl').hidden=!downloads;msg.className='cvname';msg.textContent=a.name;view.innerHTML='';
+  try{
+    if(a.kind==='pdf'||a.kind==='pdfrange'){
+      await loadScript(PDFJS+'pdf.min.js');await loadScript(PDFJS+'pdf.worker.min.js');
+      const lib=window.pdfjsLib;lib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';
+      const doc=await lib.getDocument({data:a.bytes.slice()}).promise;const w=Math.max(280,view.clientWidth-4);
+      const first=a.kind==='pdfrange'?a.p0+1:1,last=a.kind==='pdfrange'?a.p0+a.pc:doc.numPages;
+      for(let i=first;i<=Math.min(last,first+7);i++){if(openKey!==l._k)return;const pg=await doc.getPage(i);const v0=pg.getViewport({scale:1});const sc=(w/v0.width)*(window.devicePixelRatio||1);const vp=pg.getViewport({scale:sc});
+        const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;view.appendChild(c);await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;}
+      if(last-first+1>8){const n=document.createElement('div');n.className='cvname';n.style.padding='6px 10px';n.textContent=`מוצגים 8 עמודים מתוך ${last-first+1}. הורד את הקובץ כדי לראות הכל.`;view.appendChild(n)}
+    }else if(a.kind==='docx'){
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+      const r=await window.mammoth.convertToHtml({arrayBuffer:a.bytes.buffer.slice(a.bytes.byteOffset,a.bytes.byteOffset+a.bytes.byteLength)});
+      const d=document.createElement('div');d.className='doc';d.dir='auto';
+      const tmp=new DOMParser().parseFromString(r.value,'text/html');tmp.querySelectorAll('script,iframe,object,embed,link,style').forEach(x=>x.remove());tmp.querySelectorAll('*').forEach(x=>[...x.attributes].forEach(at=>{if(/^on/i.test(at.name)||(at.name==='href'&&/^\s*javascript:/i.test(at.value)))x.removeAttribute(at.name)}));
+      d.innerHTML=tmp.body.innerHTML;view.appendChild(d);
+    }else if(a.kind==='img'){
+      const im=document.createElement('img');im.alt='קורות חיים';im.src=URL.createObjectURL(new Blob([a.bytes],{type:a.mt}));view.appendChild(im);
+    }else{
+      const d=document.createElement('div');d.className='cvname';d.style.padding='10px';d.textContent='את סוג הקובץ הזה אי אפשר להציג כאן. הורד אותו כדי לפתוח.';view.appendChild(d);
+    }
+  }catch(e){view.innerHTML='';const d=document.createElement('div');d.className='err';d.style.padding='10px';d.textContent='לא הצלחתי להציג את הקובץ. אפשר להוריד אותו.';view.appendChild(d)}}
+async function dlCV(l){const a=CV.get(l._k);if(!a||!downloads)return;const msg=$('sheet').querySelector('#cvMsg');
+  try{let data=a.bytes;if(a.kind==='pdfrange'){await loadScript(PDFLIBSRC);const P=window.PDFLib;const src=await P.PDFDocument.load(a.bytes);const out=await P.PDFDocument.create();const idx=[];for(let i=0;i<a.pc;i++)idx.push(a.p0+i);(await out.copyPages(src,idx)).forEach(p=>out.addPage(p));data=await out.save()}
+    await downloads.save({filename:a.name,data:new Blob([data],{type:a.mt})});msg.textContent='הקובץ נשמר';}catch(e){msg.textContent=e&&e.code==='declined'?'ההורדה בוטלה':'ההורדה לא הצליחה'}}
+function selectText(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+let writing=Promise.resolve();
+function writeEdit(l,patch){
+  const ref=db.collection('edits').doc(l._k);
+  const cur=RAW[l._k]||{};
+  const body=Object.assign({},cur,patch,{updatedAt:new Date().toISOString()});
+  writing=writing.then(()=>ref.set(body));return writing;
+}
+async function saveEdit(l){
+  const sh=$('sheet'),msg=sh.querySelector('#editMsg');
+  const patch={status:sh.querySelector('#eStatus').value,followUp:sh.querySelector('#eFollow').value,phone:sh.querySelector('#ePhone').value.trim(),city:sh.querySelector('#eCity').value.trim()};
+  msg.className='';msg.textContent='שומר…';
+  try{await writeEdit(l,patch);msg.className='saved';msg.textContent='נשמר';}
+  catch(e){msg.className='err';msg.textContent=e&&e.code==='quota_exceeded'?'המאגר מלא, לא ניתן לשמור.':'השמירה לא הצליחה. נסה שוב.';}
+}
+async function saveCall(l){
+  const sh=$('sheet'),ta=sh.querySelector('#callText'),msg=sh.querySelector('#callMsg');const t=ta.value.trim();if(!t){msg.className='err';msg.textContent='כתוב סיכום לפני השמירה.';return}
+  const calls=((RAW[l._k]||{}).calls||[]).concat([{at:new Date().toISOString(),text:t}]);
+  msg.className='';msg.textContent='שומר…';
+  try{await writeEdit(l,{calls});ta.value='';msg.className='saved';msg.textContent='הסיכום נשמר';refreshSheet();}
+  catch(e){msg.className='err';msg.textContent='השמירה לא הצליחה. הטקסט נשאר בתיבה, נסה שוב.';}
+}
+
+// ---------- add lead
+$('addBtn').addEventListener('click',()=>{
+  openKey='__new';const sh=$('sheet');const ro=(!db||!canWrite);
+  sh.innerHTML=`<header><div><h2 id="shName">ליד חדש</h2><div class="meta">יתווסף לרשימה עם סטטוס "טרם נבדק"</div></div><button class="x" type="button" aria-label="סגירה">×</button></header>
+  <form class="body" id="newForm">
+    ${ro?'<div class="err">הוספת לידים לא זמינה בתצוגה הזו.</div>':''}
+    <div class="form-grid">
+      <label>שם מלא<input id="nN" required></label>
+      <label>טלפון נייד<input id="nP" inputmode="tel"></label>
+      <label>עיר מגורים<input id="nC"></label>
+      <label>תחום<select id="nF">${FIELDS.map(f=>`<option>${esc(f)}</option>`).join('')}</select></label>
+      <label>תפקיד<input id="nR"></label>
+      <label>חברה<input id="nCo"></label>
+      <label>סוג רישיון (לנהגים)<select id="nL"><option value="">—</option>${LICS.map(x=>`<option>${esc(x)}</option>`).join('')}</select></label>
+      <label>גיל<input id="nA" inputmode="numeric"></label>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center"><button class="btn primary" type="submit" ${ro?'disabled':''}>הוסף ליד</button><span id="newMsg"></span></div>
+  </form>`;
+  $('scrim').hidden=false;sh.hidden=false;sh.querySelector('.x').onclick=closeSheet;
+  sh.querySelector('#newForm').addEventListener('submit',async e=>{e.preventDefault();const m=sh.querySelector('#newMsg');
+    const v=id=>sh.querySelector(id).value.trim();
+    const body={n:v('#nN'),p:v('#nP'),c:v('#nC'),f:v('#nF'),r:v('#nR'),co:v('#nCo'),l:v('#nL'),a:v('#nA'),s:'טרם נבדק',d:today(),createdAt:new Date().toISOString()};
+    if(!body.n){m.className='err';m.textContent='צריך שם מלא.';return}
+    m.className='';m.textContent='מוסיף…';
+    try{const ref=await db.collection('added').add(body);m.className='saved';m.textContent='נוסף';setTimeout(()=>openSheet(ref.id),400);}
+    catch(err){m.className='err';m.textContent=err&&err.code==='quota_exceeded'?'המאגר מלא, לא ניתן להוסיף.':'ההוספה לא הצליחה. נסה שוב.';}
+  });
+  setTimeout(()=>sh.querySelector('#nN').focus(),30);
+});
+
+
+// ---------- bulk import of CVs into the system
+let impOpen=false,impRun=false,impStats={ok:0,none:0,err:0},impMsg='',wake=null;
+function impTodo(){return BASE.filter(l=>!CVIDX[l._k]).sort((a,b)=>(b.d||'').localeCompare(a.d||''))}
+function drawImport(){
+  const sh=$('sheet');if(!impOpen)return;
+  const total=BASE.length,done=BASE.filter(l=>CVIDX[l._k]).length,have=BASE.filter(l=>CVIDX[l._k]&&CVIDX[l._k].a).length,pct=total?Math.round(done*100/total):0;
+  sh.innerHTML=`<header><div><h2 id="shName">ייבוא קורות חיים</h2><div class="meta">הקבצים נמשכים מה-Gmail שלך ונשמרים בתוך המערכת</div></div><button class="x" type="button" aria-label="סגירה">×</button></header>
+  <div class="body">
+    <div class="imp-stats"><div><b>${have.toLocaleString('he-IL')}</b><span>קבצים שמורים במערכת</span></div><div><b>${(total-done).toLocaleString('he-IL')}</b><span>נשארו לבדוק</span></div><div><b>${BASE.filter(l=>CVIDX[l._k]&&CVIDX[l._k].none).length.toLocaleString('he-IL')}</b><span>הגשות בלי קובץ</span></div></div>
+    <div class="meter" aria-label="התקדמות"><i style="width:${pct}%"></i></div>
+    <div class="cvname">${pct}% מהמועמדים נבדקו${impRun?` · בסבב הזה: ${impStats.ok} נשמרו, ${impStats.none} בלי קובץ, ${impStats.err} נכשלו`:''}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="impGo">${impRun?'עצור':'התחל ייבוא'}</button>${downloads?`<button class="btn" type="button" id="expGo" ${expRun?'disabled':''}>ייצוא כל הקבצים (להעברה)</button>`:''}</div>
+    ${expMsg?`<div class="${/לא|נכשל|בוטל/.test(expMsg)?'err':'saved'}" id="expMsg">${esc(expMsg)}</div>`:''}
+    ${impMsg?`<div class="${/נגמר|לא|נעצר/.test(impMsg)?'err':'saved'}">${esc(impMsg)}</div>`:''}
+    <div class="cvname">כדי לחסוך מקום, הקבצים נשמרים בחבילות של עד 15 מועמדים בכל קובץ.</div>
+    <div class="cvname">הייבוא רץ בדפדפן שלך כל עוד הדף פתוח. אפשר לעצור ולהמשיך מתי שתרצה, והוא ימשיך מאיפה שהפסיק. המועמדים החדשים ביותר נכנסים ראשונים. אם תסגור את הדף, הייבוא ייעצר, ומה שכבר נשמר יישאר.</div>
+    <div class="cvname" id="impUsage"></div>
+  </div>`;
+  sh.querySelector('.x').onclick=()=>{impOpen=false;closeSheet()};
+  sh.querySelector('#impGo').onclick=()=>{impRun?stopImport('הייבוא נעצר. אפשר להמשיך בכל רגע.'):startImport()};
+  const eg=sh.querySelector('#expGo');if(eg)eg.onclick=()=>exportFiles();
+  assets&&assets.list().then(r=>{const u=r.usage;const el=$('impUsage');if(el&&u&&u.maxBytes)el.textContent=`נפח בשימוש: ${(u.bytes/1048576).toFixed(0)} מתוך ${(u.maxBytes/1048576).toFixed(0)} מגה, ${u.files} מתוך ${u.maxFiles} קבצים`}).catch(()=>{});
+}
+// ---------- export every stored CV file as zip parts (one-time move to the new system)
+let expRun=false,expMsg='';
+async function exportFiles(){
+  if(expRun||!downloads)return;
+  const ids=[...new Set(Object.values(CVIDX).map(d=>d&&d.a).filter(Boolean))];
+  if(!ids.length){expMsg='אין קבצים שמורים לייצוא.';drawImport();return}
+  expRun=true;const setMsg=t=>{expMsg=t;const el=$('expMsg');if(el)el.textContent=t;else drawImport()};
+  try{
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const LIMIT=150*1048576,missing=[];let part=1,done=0,zip=new window.JSZip(),bytes=0,types={};
+    const flush=async last=>{
+      if(!Object.keys(types).length)return;
+      zip.file('manifest.json',JSON.stringify({part,types}));
+      setMsg(`אורז חלק ${part}…`);
+      const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
+      for(;;){try{await downloads.save({filename:`cv-files-part-${String(part).padStart(2,'0')}.zip`,data:blob});break}
+        catch(e){if(e&&e.code==='rate_limited'){await new Promise(r=>setTimeout(r,3000));continue}throw e}}
+      part++;zip=new window.JSZip();bytes=0;types={};
+    };
+    for(const id of ids){
+      if(!expRun)break;
+      try{const r=await fetch('/_blob/'+id);if(!r.ok)throw 0;const b=await r.blob();zip.file(id,b);types[id]=r.headers.get('content-type')||b.type||'application/octet-stream';bytes+=b.size}
+      catch(e){missing.push(id)}
+      done++;if(done%50===0)setMsg(`מכין קבצים: ${done.toLocaleString('he-IL')} מתוך ${ids.length.toLocaleString('he-IL')}`);
+      if(bytes>=LIMIT)await flush(false);
+    }
+    await flush(true);
+    setMsg(`הייצוא הסתיים: ${part-1} קובצי zip, ${(ids.length-missing.length).toLocaleString('he-IL')} קבצים${missing.length?`, ${missing.length} לא נמצאו`:''}.`);
+  }catch(e){setMsg(e&&e.code==='declined'?'ההורדה בוטלה. אפשר להתחיל שוב.':'הייצוא נכשל. נסו שוב.')}
+  expRun=false;drawImport();
+}
+function stopImport(m){impRun=false;flushBundle().catch(()=>{});impMsg=m||'';try{wake&&wake.release()}catch(e){}wake=null;drawImport()}
+async function startImport(){
+  impRun=true;impMsg='';impStats={ok:0,none:0,err:0};drawImport();
+  try{wake=await navigator.wakeLock?.request('screen')}catch(e){}
+  const queue=impTodo();let i=0;
+  async function worker(){
+    while(impRun&&i<queue.length){const l=queue[i++];if(CVIDX[l._k])continue;
+      try{const a=await fetchCV(l,true);
+        if(!a){await db.collection('cv').doc(l._k).set({none:true,at:new Date().toISOString()});impStats.none++;}
+        else{await addToBundle(l,a);}}
+      catch(e){const c=e&&e.code;
+        if(c==='quota_or_state'){stopImport('המקום לקבצים במערכת נגמר. הקבצים שכבר נשמרו נשארים.');return}
+        if(['needs_reauth','server_not_connected','not_in_manifest','approval_required','blocked_by_policy','selection_required','no_mcp','upstream_auth'].includes(c)){stopImport(MCPMSG[c]||'אין גישה ל-Gmail. בדוק את החיבור ונסה שוב.');return}
+        if(c==='too_large'||c==='unsupported_type'||c==='invalid_request'){try{await db.collection('cv').doc(l._k).set({none:true,skip:c,at:new Date().toISOString()})}catch(x){}impStats.none++}
+        else{impStats.err++;await new Promise(r=>setTimeout(r,c==='rate_limited'||c==='server_unavailable'?20000:3000))}}
+      if(impOpen)drawImport();
+    }}
+  await Promise.all([worker(),worker()]);
+  try{await flushBundle()}catch(e){if(e&&e.code==='quota_or_state'){stopImport('המקום לקבצים במערכת נגמר. הקבצים שכבר נשמרו נשארים.');return}}
+  if(impRun)stopImport(impTodo().length?'הסבב הסתיים. לחץ שוב כדי לנסות את מה שנכשל.':'כל קורות החיים נבדקו ונשמרו במערכת.');
+}
+$('importBtn').addEventListener('click',()=>{impOpen=true;openKey='__import';$('scrim').hidden=false;$('sheet').hidden=false;drawImport()});
+// ---------- export
+$('exportBtn').addEventListener('click',async()=>{
+  const A=all().filter(l=>matches(l,eff(l),false));
+  const H=['שם מלא','טלפון','גיל','עיר','תחום','סוג רישיון','תפקיד','חברה','סטטוס','קבוצת סטטוס','לחזור בתאריך','סיכומי שיחות','פירוט מהמייל','תאריך הגשה','קישור להגשה'];
+  const q=s=>'"'+String(s??'').replace(/"/g,'""').replace(/\r?\n/g,' ')+'"';
+  const lines=[H.map(q).join(',')];
+  for(const l of A){const E=eff(l);lines.push([l.n,E.phone,l.a,cityLabel(E.city),l.f,l.l,l.r,l.co,E.status,grp(E.status),E.followUp,E.calls.map(c=>new Date(c.at).toLocaleDateString('he-IL')+': '+c.text).join(' | '),l.rs,l.d,l.added?'':gmail(l.ids[l.ids.length-1])].map(q).join(','));}
+  const csv='﻿'+lines.join('\r\n');
+  const btn=$('exportBtn');
+  if(!downloads){btn.textContent='ייצוא לא זמין כאן';setTimeout(()=>btn.textContent='ייצוא לאקסל',2500);return}
+  try{await downloads.save({filename:`לידים_${today()}.csv`,data:new Blob([csv],{type:'text/csv;charset=utf-8'})});btn.textContent=`יוצאו ${A.length}`;}
+  catch(e){btn.textContent=e&&e.code==='declined'?'הייצוא בוטל':'הייצוא לא הצליח';}
+  setTimeout(()=>btn.textContent='ייצוא לאקסל',2500);
+});
+window.addEventListener('resize',()=>document.documentElement.style.setProperty('--deck-h',$('deck').offsetHeight+'px'));
+render();
+})();
+</script>
+
+</body></html>

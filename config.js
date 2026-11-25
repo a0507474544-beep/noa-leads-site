@@ -1,0 +1,1 @@
+window.NOA_CONFIG={"supabaseUrl":"https://nobffbjdglgsijqxutdv.supabase.co","supabaseAnonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vYmZmYmpkZ2xnc2lqcXh1dGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MDIwNzQsImV4cCI6MjExMTE3ODA3NH0.eCrNPG0ZMvoMael5Zw2dd7BVDRoY02tYqkok4aPKRaA","googleLogin":false};
