@@ -177,6 +177,17 @@
     top.appendChild(b);
   }
 
+  function showError(text) {
+    let el = document.getElementById('noaErr');
+    if (!el) {
+      el = document.createElement('div'); el.id = 'noaErr'; el.setAttribute('role', 'alert');
+      el.style.cssText = 'position:fixed;inset:auto 16px 16px 16px;z-index:50;max-width:720px;margin:0 auto;padding:12px 16px;border-radius:12px;' +
+        'background:#f7dede;color:#7a1f1f;border:1px solid #e7b3b3;font:14px Heebo,Arial,sans-serif;direction:rtl;box-shadow:0 10px 30px -10px rgba(0,0,0,.35)';
+      document.body.appendChild(el);
+    }
+    el.textContent = text;
+  }
+
   // ---------- helpers ----------
   async function selectAll(build) {
     const out = [];
@@ -294,17 +305,34 @@
     if (path === 'leads.json' || path === '/leads.json') {
       await ready;
       try {
-        // ~10k rows: ask for the count, then fetch all pages in parallel (sequential paging took ~9s)
-        const { count, error: cErr } = await sb.from('leads').select('id', { count: 'exact', head: true });
-        if (cErr) throw cErr;
-        const pages = [];
-        for (let from = 0; from < (count || 0); from += PAGE) {
-          pages.push(sb.from('leads').select('data').order('ord').range(from, from + PAGE - 1)
-            .then(({ data, error }) => { if (error) throw error; return data; }));
-        }
-        const rows = (await Promise.all(pages)).flat();
+        // ~10k rows in pages of 1000: 4 at a time, each retried up to 4 times (sequential paging took ~9s;
+        // all-at-once can hit statement timeouts when the database is busy)
+        const retry = async (what, fn) => {
+          for (let attempt = 1; ; attempt++) {
+            const { data, count, error } = await fn();
+            if (!error) return { data, count };
+            if (attempt >= 4) { error.message = `${what}: ${error.message || error.code || error.status || 'error'}`; throw error; }
+            await new Promise(r => setTimeout(r, 700 * attempt));
+          }
+        };
+        const { count } = await retry('count', () => sb.from('leads').select('id', { count: 'exact', head: true }));
+        if (!count) throw new Error('count: 0 leads visible');
+        const starts = []; for (let from = 0; from < count; from += PAGE) starts.push(from);
+        const parts = new Array(starts.length);
+        let next = 0;
+        await Promise.all(Array.from({ length: 4 }, async () => {
+          while (next < starts.length) {
+            const i = next++, from = starts[i];
+            parts[i] = (await retry(`page ${i + 1}`, () => sb.from('leads').select('data').order('ord').range(from, from + PAGE - 1))).data;
+          }
+        }));
+        const rows = parts.flat();
         return new Response(JSON.stringify(rows.map(r => r.data)), { status: 200, headers: { 'content-type': 'application/json' } });
-      } catch (e) { console.error('leads load failed', e); return new Response('{}', { status: 500 }); }
+      } catch (e) {
+        console.error('leads load failed', e);
+        showError('טעינת רשימת המועמדים נכשלה. רעננו את הדף בעוד רגע. פרטים לתמיכה: ' + (e && e.message || e));
+        return new Response('{}', { status: 500 });
+      }
     }
     const m = path.match(/^\/_blob\/([A-Za-z0-9_-]+)$/);
     if (m) {
